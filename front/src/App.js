@@ -33,14 +33,14 @@ import React from "react"
 import { useEffect,useState } from "react";
 import Navbar from "react-bootstrap/Navbar"
 import Container from "react-bootstrap/Container"
-import TakList from "./comp/TaskList";
+import TaskList from "./comp/TaskList";
 import TaskAdd from "./comp/TaskAdd";
 
 function App(){
    const [task,setTask]=useState([]);
 
    useEffect(()=>{
-      axios.get("api/tasks")
+      axios.get("http://127.0.0.1:8000/api/tasks/")
       .then((res)=>{
          setTask(res.data)
       }).catch(()=>{
@@ -58,7 +58,7 @@ function App(){
          </Navbar>
          <Container>
             <TaskAdd/>
-            <TakList />
+            <TaskList tasks={task}/>
          </Container>
       </div>
    );
