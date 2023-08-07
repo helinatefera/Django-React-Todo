@@ -40,7 +40,7 @@ function App(){
    const [task,setTask]=useState([]);
 
    useEffect(()=>{
-      axios.get("http://127.0.0.1:8000/api/tasks/")
+      axios.get("/api/tasks/")
       .then((res)=>{
          setTask(res.data)
       }).catch(()=>{
@@ -51,13 +51,13 @@ function App(){
       <div>
          <Navbar bg= "lights">
             <Container>
-               <Navbar.Brand href="https://www.appsloveworld.com/reactjs/200/502/cannot-read-properties-of-null-reading-useref-error">
+               <Navbar.Brand>
                   Task Management
                </Navbar.Brand>
             </Container>
          </Navbar>
          <Container>
-            <TaskAdd/>
+            <TaskAdd tasks={task} setTasks={setTask}/>
             <TaskList tasks={task} setTask={setTask}/>
          </Container>
       </div>

@@ -1,11 +1,28 @@
-import React from 'react'
+import React, { useState } from 'react'
 import ListGroup  from "react-bootstrap/ListGroup"
 import {FaCheck,FaCheckDouble} from "react-icons/fa"
 import {AiFillEdit,AiFillDelete} from "react-icons/ai"
+import Modal from "react-bootstrap/Modal"
+import FormControl from "react-bootstrap/FormControl"
+import Button from 'react-bootstrap/esm/Button'
+// import {MdCheckBox,MdCheckBoxOutlineBlank} from "react-icons/md"
 import axios from "axios"
+// import Button from 'react-bootstrap/Button'
 export default function TaskList({tasks = [],setTask}){
+
+
+    const [show,setShow]=useState(false)
+    const [record,setRecord] = useState(null)
+
+
+    const closeEdit=()=>{
+        setShow(false);
+    }
+
+
+
     const updateTask = async(id,value)=>{
-        return axios.patch(`api/tasks/${id}`,value)
+        return axios.patch(`api/tasks/${id}/`,value)
         .then((res)=>{
             const {data}=res;
             const updateTask=tasks.map(task=>{
@@ -25,6 +42,11 @@ export default function TaskList({tasks = [],setTask}){
             <span style={{
                 marginRight: "12px", cursor: "pointer"
             }} 
+            onClick={()=>{
+                updateTask(task.id,{
+                    completed:!task.completed
+                })
+            }}
             >
                 {task.completed === true ? <FaCheckDouble /> : <FaCheck />}
             </span>
@@ -37,21 +59,67 @@ export default function TaskList({tasks = [],setTask}){
                     cursor: "pointer",
                     marginRight: "12px"
                 }} onClick={()=>{
-                    updateTask(task.id,{
-                        completed:!task.completed
-                    })
+                    setRecord(task);
+                    setShow(true)
                 }}/>
                 <AiFillDelete style={{
                     cursor: "pointer"
-                }} />
+                }} onClick={()=>{
+                    deleteTask(task.id);
+                }}/>
             </div>
     </ListGroup.Item>
     }
 
-  
-   return <ListGroup>
-    <ListGroup.Item>
+
+    const onchange = (e)=>{
+        setRecord({
+            ...record,
+            name:e.target.value
+        })
+
+    }  
+
+
+    const saveChange=async()=>{
+        await updateTask(record.id,{task:record.name});
+        closeEdit()
+    }
+
+    const deleteTask=(id)=>{
+        axios.delete(`/api/tasks//${id}`).then(()=>{
+            const updatask =tasks.filter(task=>{
+                return task.id !== id
+            })
+            setTask(updatask)
+        }).catch(()=>{
+            alert("wrong")
+        })
+    }
+
+    const completed = tasks.filter(task=>task.completed===true);
+    const incompleted = tasks.filter(task=>task.completed===false);
+
+   return <div>
+    <ListGroup>
           {tasks.map(allTasks)}
-          </ListGroup.Item>
      </ListGroup>
+     <Modal show={show} onHide={closeEdit}>
+        <Modal.Header closeButton>
+            <Modal.Title>Edit Todo</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            <FormControl   value={record?record.name:""}
+            onChange={onchange}/>
+        </Modal.Body>
+        <Modal.Footer>
+            <Button onClick={closeEdit} variant='secondary'> 
+                close
+            </Button>
+            <Button onClick={saveChange} variant='primary'> 
+                save
+            </Button>
+        </Modal.Footer>
+     </Modal>
+   </div>
 }
