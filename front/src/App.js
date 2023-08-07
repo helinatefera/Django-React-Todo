@@ -58,7 +58,7 @@ function App(){
          </Navbar>
          <Container>
             <TaskAdd/>
-            <TaskList tasks={task}/>
+            <TaskList tasks={task} setTask={setTask}/>
          </Container>
       </div>
    );
