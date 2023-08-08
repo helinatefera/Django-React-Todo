@@ -5,9 +5,7 @@ import {AiFillEdit,AiFillDelete} from "react-icons/ai"
 import Modal from "react-bootstrap/Modal"
 import FormControl from "react-bootstrap/FormControl"
 import Button from 'react-bootstrap/esm/Button'
-// import {MdCheckBox,MdCheckBoxOutlineBlank} from "react-icons/md"
 import axios from "axios"
-// import Button from 'react-bootstrap/Button'
 export default function TaskList({tasks = [],setTask}){
 
 
@@ -20,7 +18,7 @@ export default function TaskList({tasks = [],setTask}){
     }
 
 
-
+     
     const updateTask = async(id,value)=>{
         return axios.patch(`api/tasks/${id}/`,value)
         .then((res)=>{
@@ -90,15 +88,17 @@ export default function TaskList({tasks = [],setTask}){
         axios.delete(`/api/tasks//${id}`).then(()=>{
             const updatask =tasks.filter(task=>{
                 return task.id !== id
+                
             })
+            window.location.reload(false);
             setTask(updatask)
         }).catch(()=>{
             alert("wrong")
         })
     }
 
-    const completed = tasks.filter(task=>task.completed===true);
-    const incompleted = tasks.filter(task=>task.completed===false);
+    // const completed = tasks.filter(task=>task.completed===true);
+    // const incompleted = tasks.filter(task=>task.completed===false);
 
    return <div>
     <ListGroup>

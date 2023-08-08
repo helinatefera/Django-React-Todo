@@ -9,23 +9,23 @@ import Form from "react-bootstrap/Form"
 
 
 export default function TaskAdd({ tasks, setTasks }) {
-    const [name, setName] = useState("");
+    const [task, setTask ]= useState("");
 
     const handleChange = e => {
-        setName(e.target.value);
+        setTask(e.target.value);
     }
-
+    
     const handleSubmit = e => {
         e.preventDefault();
-        if (!name) {
+        if (!task) {
             alert("Please provide a valid value for todo");
             return;
         }
 
-        axios.post("/api/tasks/", {
-            task: name
+         axios.post("/api/tasks/", {
+            task: task
         }).then((res) => {
-            setName("");
+            setTask("");
             const { data } = res;
             setTasks([
                 ...tasks,
@@ -40,7 +40,7 @@ export default function TaskAdd({ tasks, setTasks }) {
         <InputGroup className="mb-4">
             <FormControl placeholder="New Todo"
                 onChange={handleChange}
-                value={name}
+                value={task}
             />
             <Button type="submit">
                 Add
